@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Burger Menu</title>
+    <link rel="icon" type="image/png" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_xRzVbVwciF4IAq1qpca_igUk6hyeEKg5jA&s">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #000;
+            color: white;
+            font-family: 'Arial', sans-serif;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* Diagonal Yellow Accents */
+        .diagonal-accent {
+            position: absolute;
+            background-color: #FFD700;
+            z-index: 1;
+        }
+
+        .diagonal-top-left {
+            top: 0;
+            left: 0;
+            width: 150px;
+            height: 150px;
+            clip-path: polygon(0 0, 100% 0, 0 100%);
+        }
+
+        .diagonal-top-right {
+            top: 0;
+            right: 0;
+            width: 150px;
+            height: 150px;
+            clip-path: polygon(100% 0, 100% 100%, 0 0);
+        }
+
+        .diagonal-bottom-left {
+            bottom: 0;
+            left: 0;
+            width: 150px;
+            height: 150px;
+            clip-path: polygon(0 0, 100% 100%, 0 100%);
+        }
+
+        .diagonal-bottom-right {
+            bottom: 0;
+            right: 0;
+            width: 150px;
+            height: 150px;
+            clip-path: polygon(100% 0, 100% 100%, 0 100%);
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        /* Header Section */
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .burger-icon {
+            font-size: 3rem;
+            color: #FFD700;
+            margin-bottom: 1rem;
+            opacity: 0;
+            transform: translateY(-20px);
+            animation: fadeInDown 1s ease-out 0.5s forwards;
+        }
+
+        .title {
+            margin-bottom: 2rem;
+        }
+
+        .title h1 {
+            font-size: 3.5rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            opacity: 0;
+            transform: translateX(-50px);
+            animation: slideInLeft 1s ease-out 1s forwards;
+        }
+
+        .title .burger-text {
+            color: white;
+        }
+
+        .title .menu-text {
+            color: #FFD700;
+            opacity: 0;
+            transform: translateX(50px);
+            animation: slideInRight 1s ease-out 1.5s forwards;
+        }
+
+        .hours-banner {
+            background-color: #2d5016;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            position: relative;
+            display: inline-block;
+            margin-top: 1rem;
+            opacity: 0;
+            transform: scale(0.8);
+            animation: scaleIn 0.8s ease-out 2s forwards;
+        }
+
+        .hours-banner::before,
+        .hours-banner::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 20px;
+            height: 20px;
+            background-color: #2d5016;
+            transform: translateY(-50%) rotate(45deg);
+        }
+
+        .hours-banner::before {
+            left: -10px;
+        }
+
+        .hours-banner::after {
+            right: -10px;
+        }
+
+        .hours-text {
+            font-weight: bold;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+        }
+
+        /* Menu Grid */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin: 4rem 0;
+            padding: 0 1rem;
+        }
+
+        .burger-item {
+            text-align: center;
+            position: relative;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        .burger-item:nth-child(1) { animation-delay: 2.5s; }
+        .burger-item:nth-child(2) { animation-delay: 2.7s; }
+        .burger-item:nth-child(3) { animation-delay: 2.9s; }
+        .burger-item:nth-child(4) { animation-delay: 3.1s; }
+        .burger-item:nth-child(5) { animation-delay: 3.3s; }
+        .burger-item:nth-child(6) { animation-delay: 3.5s; }
+
+        .price-bubble {
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            background-color: #FFD700;
+            color: black;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            border: 3px solid black;
+            z-index: 3;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .burger-image {
+            width: 200px;
+            height: 200px;
+            background-color: #333;
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+        }
+
+        .burger-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        .burger-description {
+            font-size: 0.9rem;
+            color: #ccc;
+            max-width: 250px;
+            margin: 0 auto;
+            line-height: 1.4;
+        }
+
+        /* Footer */
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 4rem;
+            padding: 2rem 1rem;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .delivery-info {
+            opacity: 0;
+            transform: translateX(-30px);
+            animation: slideInLeft 0.8s ease-out 4s forwards;
+        }
+
+        .delivery-text {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .phone-number {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #FFD700;
+        }
+
+        .website-info {
+            opacity: 0;
+            transform: translateX(30px);
+            animation: slideInRight 0.8s ease-out 4s forwards;
+        }
+
+        .website-text {
+            font-size: 1rem;
+            letter-spacing: 1px;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .title h1 {
+                font-size: 2.5rem;
+            }
+
+            .menu-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .footer {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .diagonal-top-left,
+            .diagonal-top-right,
+            .diagonal-bottom-left,
+            .diagonal-bottom-right {
+                width: 100px;
+                height: 100px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .title h1 {
+                font-size: 2rem;
+            }
+
+            .burger-image {
+                width: 150px;
+                height: 150px;
+                font-size: 3rem;
+            }
+
+            .price-bubble {
+                width: 50px;
+                height: 50px;
+                font-size: 1rem;
+                right: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Diagonal Yellow Accents -->
+    <div class="diagonal-accent diagonal-top-left"></div>
+    <div class="diagonal-accent diagonal-top-right"></div>
+    <div class="diagonal-accent diagonal-bottom-left"></div>
+    <div class="diagonal-accent diagonal-bottom-right"></div>
+
+    <div class="container">
+        <!-- Header Section -->
+        <header class="header">
+            <div class="burger-icon">🍔</div>
+            <div class="title">
+                <h1 class="burger-text">BURGER</h1>
+                <h1 class="menu-text">MENU</h1>
+            </div>
+            <div class="hours-banner">
+                <div class="hours-text">OPEN DAILY 8AM - 10PM</div>
+            </div>
+        </header>
+
+        <!-- Menu Grid -->
+        <main class="menu-grid">
+            <!-- Classic Cheeseburger -->
+            <div class="burger-item">
+                <div class="price-bubble">$6</div>
+                <div class="burger-image">🍔</div>
+                <h3 class="burger-name">CLASSIC CHEESEBURGER</h3>
+                <p class="burger-description">Chicken, Cheese, Onion, Tomato, Mustard, Lettuce</p>
+            </div>
+
+            <!-- BBQ Burger -->
+            <div class="burger-item">
+                <div class="price-bubble">$6.5</div>
+                <div class="burger-image">🍔</div>
+                <h3 class="burger-name">BBQ BURGER</h3>
+                <p class="burger-description">100% beef patty, smoked bacon, and BBQ sauce on a pretzel bun.</p>
+            </div>
+
+            <!-- Chicken Cheese Burger -->
+            <div class="burger-item">
+                <div class="price-bubble">$5</div>
+                <div class="burger-image">🍔</div>
+                <h3 class="burger-name">CHICKEN CHEESE BURGER</h3>
+                <p class="burger-description">Chicken, Cheese, Onion, Tomato, Mustard, Lettuce</p>
+            </div>
+
+            <!-- Classic Burger -->
+            <div class="burger-item">
+                <div class="price-bubble">$6</div>
+                <div class="burger-image">🍔</div>
+                <h3 class="burger-name">CLASSIC BURGER</h3>
+                <p class="burger-description">Chicken, Cheese, Onion, Tomato, Mustard, Lettuce</p>
+            </div>
+
+            <!-- Double Decker Burger -->
+            <div class="burger-item">
+                <div class="price-bubble">$6.5</div>
+                <div class="burger-image">🍔</div>
+                <h3 class="burger-name">DOUBLE DECKER BURGER</h3>
+                <p class="burger-description">double cheese, lettuce, tomato, onion and chef's sauce on a toasted sesame bun.</p>
+            </div>
+
+            <!-- Chicken Cheese Burger -->
+            <div class="burger-item">
+                <div class="price-bubble">$5</div>
+                <div class="burger-image">🍔</div>
+                <h3 class="burger-name">CHICKEN CHEESE BURGER</h3>
+                <p class="burger-description">100% lamb patty, less cheese, Cilantro, Onion, Lettuce, Tomato</p>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="delivery-info">
+                <div class="delivery-text">Delivery order</div>
+                <div class="phone-number">+123-456-7890</div>
+            </div>
+            <div class="website-info">
+               
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Additional interactive animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add hover effects to burger items
+            const burgerItems = document.querySelectorAll('.burger-item');
+            
+            burgerItems.forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-10px) scale(1.05)';
+                    this.style.transition = 'all 0.3s ease';
+                });
+                
+                item.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+
+            // Add click animation to price bubbles
+            const priceBubbles = document.querySelectorAll('.price-bubble');
+            
+            priceBubbles.forEach(bubble => {
+                bubble.addEventListener('click', function() {
+                    this.style.animation = 'none';
+                    this.offsetHeight; // Trigger reflow
+                    this.style.animation = 'scaleIn 0.3s ease-out';
+                });
+            });
+
+            // Animate burger icons on scroll
+            const burgerImages = document.querySelectorAll('.burger-image');
+            
+            const observerOptions = {
+                threshold: 0.5,
+                rootMargin: '0px 0px -100px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animation = 'scaleIn 0.6s ease-out';
+                    }
+                });
+            }, observerOptions);
+
+            burgerImages.forEach(img => {
+                observer.observe(img);
+            });
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96857676f6437545',t:'MTc1NDA1MjY0Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
